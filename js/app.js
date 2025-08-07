@@ -581,4 +581,54 @@ document.addEventListener("DOMContentLoaded", (event) => {
       successMessage.removeAttribute("hidden");
     }
   }
+
+  // Ctrl random number overlay toggle
+  let ctrlRandomOverlay = null;
+
+  function showCtrlRandomOverlay() {
+    const value = Math.floor(Math.random() * 100) + 1;
+
+    // Create overlay root if not existing
+    if (!ctrlRandomOverlay) {
+      const overlay = document.createElement("div");
+      overlay.className = "ctrl-random-overlay";
+
+      const panel = document.createElement("div");
+      panel.className = "ctrl-random-panel";
+
+      const number = document.createElement("div");
+      number.className = "ctrl-random-value";
+      number.textContent = String(value);
+
+      panel.appendChild(number);
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+
+      ctrlRandomOverlay = overlay;
+    } else {
+      const number = ctrlRandomOverlay.querySelector(".ctrl-random-value");
+      if (number) number.textContent = String(value);
+      ctrlRandomOverlay.style.display = "grid";
+    }
+  }
+
+  function hideCtrlRandomOverlay() {
+    if (ctrlRandomOverlay) {
+      // Remove fully to ensure a fresh random value container next open
+      ctrlRandomOverlay.remove();
+      ctrlRandomOverlay = null;
+    }
+  }
+
+  function handleCtrlKeydown(event) {
+    if (event.key === "Control" && event.repeat === false) {
+      if (ctrlRandomOverlay) {
+        hideCtrlRandomOverlay();
+      } else {
+        showCtrlRandomOverlay();
+      }
+    }
+  }
+
+  document.addEventListener("keydown", handleCtrlKeydown);
 });
